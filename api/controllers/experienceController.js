@@ -1,5 +1,4 @@
 const pool = require('../config/db');
-const { v4: uuidv4 } = require('uuid');
 
 exports.create = async (req, res) => {
   const { user_id, company, role, start_date, end_date, description } = req.body;
@@ -8,7 +7,7 @@ exports.create = async (req, res) => {
     `INSERT INTO experiences 
     (id, user_id, company, role, start_date, end_date, description)
     VALUES ($1,$2,$3,$4,$5,$6,$7) RETURNING *`,
-    [uuidv4(), user_id, company, role, start_date, end_date, description]
+    [user_id, company, role, start_date, end_date, description]
   );
 
   res.json(result.rows[0]);

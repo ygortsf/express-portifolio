@@ -1,12 +1,11 @@
 const pool = require('../config/db');
-const { v4: uuidv4 } = require('uuid');
 
 exports.create = async (req, res) => {
   const { user_id, name, level } = req.body;
 
   const result = await pool.query(
     'INSERT INTO skills (id, user_id, name, level) VALUES ($1,$2,$3,$4) RETURNING *',
-    [uuidv4(), user_id, name, level]
+    [user_id, name, level]
   );
 
   res.json(result.rows[0]);
