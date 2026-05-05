@@ -1,19 +1,36 @@
+const pool = require('../config/db');
+
 exports.create = async (req, res) => {
-  try {
-    console.log('BODY:', req.body); 
+  const { user_id, company, role, start_date, end_date, description } = req.body;
 
-    const { user_id, title, company, start_date, end_date } = req.body;
+  const result = await pool.query(
+    `INSERT INTO experiences 
+    (id, user_id, company, role, start_date, end_date, description)
+    VALUES ($1,$2,$3,$4,$5,$6) RETURNING *`,
+    [user_id, company, role, start_date, end_date, description]
+  );
 
-    const result = await pool.query(
-      `INSERT INTO experiences (user_id, title, company, start_date, end_date)
-       VALUES ($1, $2, $3, $4, $5) RETURNING *`,
-      [user_id, title, company, start_date, end_date]
-    );
+  res.json(result.rows[0]);
+};
 
-    res.json(result.rows[0]);
+exports.getAll = async (req, res) => {
+  const result = await pool.query('SELECT * FROM experiences');
+  res.json(result.rows);
+};
 
-  } catch (err) {
-    console.error('ERRO REAL:', err); 
-    res.status(500).json({ error: err.message });
-  }
+exports.update = async (req, res) => {
+  const { id } = req.params;
+  const { company, role } = req.body;
+
+  const result = await pool.query(
+    'UPDATE experiences SET company=$1, role=$2 WHERE id=$3 RETURNING *',
+    [company, role, id]
+  );
+
+  res.json(result.rows[0]);
+};
+
+exports.delete = async (req, res) => {
+  await pool.query('DELETE FROM experiences WHERE id=$1', [req.params.id]);
+  res.json({ message: 'Deleted' });
 };

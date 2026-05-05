@@ -4,7 +4,7 @@ exports.create = async (req, res) => {
   const { user_id, institution, course } = req.body;
 
   const result = await pool.query(
-    'INSERT INTO educations (id, user_id, institution, course) VALUES ($1,$2,$3,$4) RETURNING *',
+    'INSERT INTO educations (id, user_id, institution, course) VALUES ($1,$2,$3) RETURNING *',
     [user_id, institution, course]
   );
 
