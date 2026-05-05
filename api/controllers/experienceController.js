@@ -5,7 +5,7 @@ exports.create = async (req, res) => {
 
   const result = await pool.query(
     `INSERT INTO experiences 
-    (id, user_id, company, role, start_date, end_date, description)
+    (user_id, company, role, start_date, end_date, description)
     VALUES ($1,$2,$3,$4,$5,$6) RETURNING *`,
     [user_id, company, role, start_date, end_date, description]
   );
